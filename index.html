@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Johnston Media — Social Media Consent</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET & BASE ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  background: #F7F5F0;
+  color: #1C1C1A;
+  min-height: 100vh;
+}
+
+/* ─── CSS VARIABLES ─── */
+:root {
+  --ink: #1C1C1A;
+  --ink-mid: #5A5A55;
+  --ink-light: #9A9A92;
+  --paper: #F7F5F0;
+  --paper-dark: #EEEBE3;
+  --white: #FDFCF9;
+  --gold: #B8952A;
+  --gold-pale: #F0E8D0;
+  --gold-border: #D4B76A;
+  --red: #C0392B;
+  --green: #2E7D52;
+  --border: rgba(28,28,26,0.12);
+  --border-strong: rgba(28,28,26,0.25);
+  --nav-h: 60px;
+  --radius: 3px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+}
+
+/* ─── UTILITY ─── */
+.hidden { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+/* ─── NAV ─── */
+#nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: var(--nav-h);
+  background: var(--ink);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.nav-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem; font-weight: 500;
+  color: #fff; letter-spacing: 0.04em;
+}
+.nav-brand em { color: var(--gold-border); font-style: normal; }
+.nav-actions { display: flex; gap: 0.5rem; align-items: center; }
+.nav-btn {
+  font-family: 'Outfit', sans-serif; font-size: 0.72rem; font-weight: 400;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.4rem 0.9rem; border-radius: var(--radius);
+  cursor: pointer; transition: all 0.18s; border: 1px solid transparent;
+  background: transparent; color: rgba(255,255,255,0.55);
+}
+.nav-btn:hover { color: #fff; border-color: rgba(255,255,255,0.2); }
+.nav-btn.primary { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+.nav-btn.primary:hover { background: #a07e20; border-color: #a07e20; }
+#nav-user-name { font-size: 0.78rem; color: var(--gold-border); letter-spacing: 0.04em; }
+
+/* ─── PAGE SECTIONS ─── */
+section.page {
+  min-height: 100vh;
+  padding-top: var(--nav-h);
+}
+
+/* ─── AUTH PAGES ─── */
+.auth-outer {
+  min-height: calc(100vh - var(--nav-h));
+  display: flex; align-items: center; justify-content: center;
+  padding: 3rem 1.5rem;
+  background: var(--ink);
+}
+.auth-card {
+  background: #242420;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius);
+  padding: 3rem 2.5rem;
+  width: 100%; max-width: 420px;
+}
+.auth-card h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem; font-weight: 400;
+  color: #fff; margin-bottom: 0.3rem; line-height: 1.1;
+}
+.auth-card .sub { font-size: 0.85rem; color: rgba(255,255,255,0.38); margin-bottom: 2rem; line-height: 1.5; }
+.auth-field { margin-bottom: 1.1rem; }
+.auth-field label { display: block; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 0.4rem; }
+.auth-field input {
+  width: 100%; padding: 0.78rem 1rem;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius); color: #fff;
+  font-family: 'Outfit', sans-serif; font-size: 0.9rem; font-weight: 300;
+  outline: none; transition: border-color 0.18s;
+}
+.auth-field input:focus { border-color: var(--gold-border); }
+.auth-field input::placeholder { color: rgba(255,255,255,0.2); }
+.auth-err { font-size: 0.78rem; color: #e07060; margin-bottom: 0.9rem; display: none; padding: 0.55rem 0.85rem; background: rgba(192,57,43,0.1); border-radius: var(--radius); }
+.btn-full {
+  width: 100%; padding: 0.85rem;
+  font-family: 'Outfit', sans-serif; font-size: 0.8rem; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  background: var(--gold); color: var(--ink); border: none; border-radius: var(--radius);
+  cursor: pointer; transition: background 0.18s;
+}
+.btn-full:hover { background: #a07e20; }
+.btn-full.outline {
+  background: transparent; color: rgba(255,255,255,0.55); border: 1px solid rgba(255,255,255,0.15);
+}
+.btn-full.outline:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+.auth-divider { display: flex; align-items: center; gap: 1rem; margin: 1.2rem 0; }
+.auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
+.auth-divider span { font-size: 0.7rem; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 0.1em; }
+.auth-switch { margin-top: 1.5rem; text-align: center; font-size: 0.8rem; color: rgba(255,255,255,0.3); }
+.auth-switch a { color: var(--gold-border); cursor: pointer; text-decoration: none; }
+.auth-switch a:hover { text-decoration: underline; }
+.google-btn {
+  width: 100%; padding: 0.75rem;
+  background: #fff; border: none; border-radius: var(--radius);
+  font-family: 'Outfit', sans-serif; font-size: 0.85rem; font-weight: 400;
+  color: #444; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.65rem;
+  transition: background 0.18s;
+}
+.google-btn:hover { background: #f0f0f0; }
+.google-btn svg { width: 17px; height: 17px; flex-shrink: 0; }
+
+/* ─── ROLE PICKER ─── */
+#role-page {
+  background: var(--ink);
+}
+.role-hero {
+  padding: 5rem 2rem 3rem;
+  text-align: center;
+  position: relative;
+}
+.role-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(184,149,42,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.role-hero .eyebrow { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-border); margin-bottom: 1rem; }
+.role-hero h1 {
+  font-family: 'Cormorant Garamond', serif; font-weight: 400; font-style: italic;
+  color: #fff; font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1.1;
+  max-width: 600px; margin: 0 auto 1rem;
+}
+.role-hero p { color: rgba(255,255,255,0.38); font-size: 0.88rem; max-width: 420px; margin: 0 auto; line-height: 1.7; }
+.role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 700px; margin: 3rem auto 5rem; padding: 0 1.5rem; }
+@media (max-width: 560px) { .role-grid { grid-template-columns: 1fr; } }
+.role-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius); padding: 2.5rem 2rem;
+  cursor: pointer; transition: border-color 0.2s, background 0.2s, transform 0.18s;
+  text-align: left;
+}
+.role-card:hover { border-color: var(--gold-border); background: rgba(184,149,42,0.05); transform: translateY(-2px); }
+.role-card .rc-icon { font-size: 2rem; margin-bottom: 1.2rem; display: block; }
+.role-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.45rem; font-weight: 500; color: #fff; margin-bottom: 0.6rem; }
+.role-card p { font-size: 0.82rem; color: rgba(255,255,255,0.38); line-height: 1.65; }
+.role-card .tag { display: inline-block; margin-top: 1.2rem; font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-border); border: 1px solid rgba(184,149,42,0.3); padding: 0.22rem 0.6rem; border-radius: var(--radius); }
+
+/* ─── FORM PAGES ─── */
+.form-page { background: var(--paper); }
+.form-hero { background: var(--ink); padding: 4rem 2rem 3rem; text-align: center; position: relative; }
+.form-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 50% 0%, rgba(184,149,42,0.08) 0%, transparent 70%); pointer-events: none; }
+.form-hero .eyebrow { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-border); margin-bottom: 0.8rem; }
+.form-hero h2 { font-family: 'Cormorant Garamond', serif; font-weight: 400; color: #fff; font-size: clamp(1.9rem, 4vw, 3rem); margin-bottom: 0.75rem; line-height: 1.15; }
+.form-hero p { color: rgba(255,255,255,0.38); font-size: 0.85rem; max-width: 440px; margin: 0 auto; line-height: 1.7; }
+.back-btn {
+  display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1.5rem;
+  font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(255,255,255,0.3); cursor: pointer; background: none; border: none;
+  font-family: 'Outfit', sans-serif; transition: color 0.18s;
+}
+.back-btn:hover { color: var(--gold-border); }
+
+.form-wrap { max-width: 720px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+
+.f-section-label {
+  font-size: 0.66rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold); font-weight: 500; margin-bottom: 1.2rem;
+  padding-bottom: 0.5rem; border-bottom: 1px solid var(--gold-pale);
+}
+.f-card {
+  background: var(--white); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 2rem; margin-bottom: 1.25rem; box-shadow: var(--shadow);
+}
+.f-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 560px) { .f-grid { grid-template-columns: 1fr; } }
+.f-field { display: flex; flex-direction: column; gap: 0.35rem; }
+.f-field label { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mid); }
+.f-field input, .f-field select, .f-field textarea {
+  font-family: 'Outfit', sans-serif; font-weight: 300; font-size: 0.9rem;
+  padding: 0.7rem 0.9rem; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--paper); color: var(--ink); outline: none; width: 100%;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+.f-field input:focus, .f-field select:focus, .f-field textarea:focus {
+  border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,149,42,0.1);
+}
+.f-field textarea { resize: vertical; min-height: 80px; }
+
+.consent-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.consent-row {
+  display: flex; align-items: flex-start; gap: 0.8rem;
+  padding: 0.9rem 1rem; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--paper); cursor: pointer; transition: border-color 0.18s;
+}
+.consent-row:hover { border-color: var(--gold-border); }
+.consent-row input[type="checkbox"] { accent-color: var(--gold); width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0; cursor: pointer; }
+.consent-row-text { font-size: 0.86rem; line-height: 1.6; color: #444; }
+.consent-row-text strong { display: block; font-size: 0.76rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink); margin-bottom: 0.12rem; }
+
+.opt-out-box {
+  background: #FFFBF0; border: 1px solid var(--gold-pale); border-radius: var(--radius);
+  padding: 1rem 1.2rem; font-size: 0.8rem; color: #7a6520; line-height: 1.65; margin-bottom: 1.25rem;
+}
+.opt-out-box strong { color: var(--ink); }
+
+.age-confirm-row {
+  display: flex; align-items: flex-start; gap: 0.85rem;
+  padding: 1.1rem 1.25rem; border: 2px solid var(--gold-pale); border-radius: var(--radius);
+  background: #FFFBF0; cursor: pointer;
+}
+.age-confirm-row input[type="checkbox"] { accent-color: var(--gold); width: 17px; height: 17px; margin-top: 2px; flex-shrink: 0; cursor: pointer; }
+.age-confirm-row span { font-size: 0.86rem; line-height: 1.6; color: #555; font-weight: 400; }
+
+canvas.sig-pad {
+  width: 100%; height: 150px; display: block;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--paper); cursor: crosshair; touch-action: none;
+}
+.sig-clear {
+  font-family: 'Outfit', sans-serif; font-size: 0.7rem; font-weight: 400;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.4rem 0.85rem; border: 1px solid var(--border); border-radius: var(--radius);
+  background: transparent; color: var(--ink-mid); cursor: pointer; transition: all 0.18s;
+  margin-top: 0.5rem;
+}
+.sig-clear:hover { border-color: var(--gold); color: var(--gold); }
+
+.submit-btn {
+  width: 100%; padding: 1rem;
+  font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  background: var(--ink); color: #fff; border: none; border-radius: var(--radius);
+  cursor: pointer; transition: background 0.18s; margin-top: 0.5rem;
+}
+.submit-btn:hover { background: #333; }
+.legal-note { font-size: 0.72rem; color: var(--ink-light); text-align: center; line-height: 1.6; margin-top: 0.85rem; }
+
+/* ─── SUCCESS ─── */
+#success-page { background: var(--paper); }
+.success-inner { min-height: calc(100vh - var(--nav-h)); display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 4rem 2rem; }
+.success-mark { font-size: 3rem; margin-bottom: 1.5rem; }
+.success-inner h2 { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 400; margin-bottom: 0.6rem; }
+.success-inner p { color: var(--ink-mid); max-width: 440px; line-height: 1.7; font-size: 0.88rem; }
+.expiry-pill { display: inline-block; margin: 1rem 0 1.5rem; padding: 0.5rem 1.2rem; background: var(--gold-pale); border: 1px solid var(--gold-border); border-radius: 100px; font-size: 0.78rem; color: #7a6520; }
+.go-dashboard {
+  padding: 0.8rem 2.2rem;
+  font-family: 'Outfit', sans-serif; font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  background: var(--ink); color: #fff; border: none; border-radius: var(--radius);
+  cursor: pointer; transition: background 0.18s;
+}
+.go-dashboard:hover { background: #333; }
+
+/* ─── MY CONSENT DASHBOARD ─── */
+#dashboard-page { background: var(--paper); }
+.dash-wrap { max-width: 700px; margin: 0 auto; padding: 3rem 1.5rem; }
+.dash-wrap h2 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 400; margin-bottom: 0.3rem; }
+.dash-wrap .sub { color: var(--ink-mid); font-size: 0.85rem; margin-bottom: 2rem; }
+.status-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow); margin-bottom: 1.25rem; }
+.status-row { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+.status-row:last-of-type { border-bottom: none; }
+.status-key { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-light); }
+.status-val { font-weight: 400; color: var(--ink); }
+.badge { display: inline-block; padding: 0.2rem 0.65rem; border-radius: 100px; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; }
+.badge-active { background: #D4EDDA; color: #1E5631; }
+.badge-expired { background: #F8D7DA; color: #721C24; }
+.badge-withdrawn { background: #F0E8D0; color: #7a6520; }
+.bar-wrap { margin: 1.25rem 0 0; }
+.bar-labels { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--ink-light); margin-bottom: 0.4rem; }
+.bar-track { height: 5px; background: var(--paper-dark); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; background: var(--gold); border-radius: 3px; transition: width 0.6s ease; }
+.dash-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.dash-btn {
+  font-family: 'Outfit', sans-serif; font-size: 0.76rem; font-weight: 500;
+  letter-spacing: 0.09em; text-transform: uppercase; padding: 0.7rem 1.5rem;
+  border-radius: var(--radius); cursor: pointer; transition: all 0.18s; border: 1px solid;
+}
+.dash-btn.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+.dash-btn.primary:hover { background: #333; border-color: #333; }
+.dash-btn.danger { background: transparent; color: var(--red); border-color: rgba(192,57,43,0.35); }
+.dash-btn.danger:hover { background: rgba(192,57,43,0.06); border-color: var(--red); }
+.no-consent-box { background: var(--white); border: 1px dashed var(--border-strong); border-radius: var(--radius); padding: 3rem 2rem; text-align: center; }
+.no-consent-box p { color: var(--ink-mid); font-size: 0.88rem; margin-bottom: 1.5rem; }
+
+/* ─── PRIVACY POLICY ─── */
+#privacy-page { background: var(--paper); }
+.privacy-wrap { max-width: 680px; margin: 0 auto; padding: 3.5rem 1.5rem 6rem; }
+.privacy-wrap .eyebrow { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.75rem; }
+.privacy-wrap h1 { font-family: 'Cormorant Garamond', serif; font-size: 2.6rem; font-weight: 400; line-height: 1.15; margin-bottom: 0.4rem; }
+.privacy-meta { font-size: 0.78rem; color: var(--ink-light); margin-bottom: 3rem; }
+.privacy-section { margin-bottom: 2.5rem; }
+.privacy-section h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-weight: 500; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+.privacy-section p { font-size: 0.88rem; line-height: 1.8; color: #444; margin-bottom: 0.85rem; }
+.privacy-section p:last-child { margin-bottom: 0; }
+.privacy-section ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; }
+.privacy-section ul li { font-size: 0.88rem; line-height: 1.7; color: #444; padding-left: 1.25rem; position: relative; }
+.privacy-section ul li::before { content: '—'; position: absolute; left: 0; color: var(--gold); font-size: 0.78rem; top: 0.1rem; }
+.privacy-highlight { background: var(--gold-pale); border-left: 3px solid var(--gold-border); border-radius: 0 var(--radius) var(--radius) 0; padding: 1rem 1.25rem; margin-bottom: 2rem; font-size: 0.85rem; color: #5a4a15; line-height: 1.7; }
+.privacy-contact { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; font-size: 0.85rem; color: var(--ink-mid); line-height: 1.7; }
+.privacy-contact a { color: var(--gold); text-decoration: none; }
+.privacy-contact a:hover { text-decoration: underline; }
+
+/* ─── ADMIN LOGIN ─── */
+#admin-login-page { background: #0A0A08; }
+
+/* ─── ADMIN DASHBOARD ─── */
+#admin-page {
+  background: #0d0d0b;
+  min-height: 100vh;
+}
+#admin-page #nav { background: #111110; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.admin-tabs { display: flex; gap: 0.5rem; align-items: center; }
+.atab {
+  font-family: 'Outfit', sans-serif; font-size: 0.72rem; font-weight: 400;
+  letter-spacing: 0.08em; text-transform: uppercase; padding: 0.38rem 0.8rem;
+  background: none; border: 1px solid transparent; border-radius: var(--radius);
+  color: rgba(255,255,255,0.3); cursor: pointer; transition: all 0.18s;
+}
+.atab:hover { color: rgba(255,255,255,0.7); }
+.atab.active { color: var(--gold-border); border-color: rgba(184,149,42,0.25); background: rgba(184,149,42,0.07); }
+.admin-body { padding: 2rem 1.5rem; max-width: 1080px; margin: 0 auto; }
+.admin-section { display: none; }
+.admin-section.active { display: block; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.85rem; margin-bottom: 2rem; }
+.stat-box { background: #161614; border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); padding: 1.25rem; }
+.stat-box .lbl { font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-bottom: 0.4rem; }
+.stat-box .val { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 400; color: #fff; }
+.stat-box .val.gold { color: var(--gold-border); }
+.table-card { background: #161614; border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); overflow: hidden; }
+.table-head { padding: 1.1rem 1.4rem; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; }
+.table-head h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 400; color: #fff; }
+.search-box { font-family: 'Outfit', sans-serif; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius); padding: 0.45rem 0.8rem; color: #fff; font-size: 0.82rem; outline: none; width: 200px; }
+.search-box:focus { border-color: var(--gold-border); }
+.search-box::placeholder { color: rgba(255,255,255,0.2); }
+table { width: 100%; border-collapse: collapse; }
+thead tr { border-bottom: 1px solid rgba(255,255,255,0.06); }
+thead th { padding: 0.75rem 1.1rem; text-align: left; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.28); font-weight: 400; }
+tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.15s; }
+tbody tr:hover { background: rgba(255,255,255,0.02); }
+tbody td { padding: 0.85rem 1.1rem; font-size: 0.82rem; color: rgba(255,255,255,0.65); }
+.tbadge { display: inline-block; padding: 0.18rem 0.55rem; border-radius: 100px; font-size: 0.65rem; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; }
+.tbadge-yes { background: rgba(46,125,82,0.2); color: #6EBD93; }
+.tbadge-no { background: rgba(192,57,43,0.15); color: #E07060; }
+.tbadge-exp { background: rgba(184,149,42,0.15); color: var(--gold-border); }
+.tbadge-act { background: rgba(46,125,82,0.2); color: #6EBD93; }
+.tbadge-wth { background: rgba(100,100,90,0.2); color: rgba(255,255,255,0.35); }
+.tsm { font-family: 'Outfit', sans-serif; font-size: 0.68rem; font-weight: 400; letter-spacing: 0.07em; text-transform: uppercase; padding: 0.25rem 0.6rem; border: 1px solid rgba(255,255,255,0.12); background: none; color: rgba(255,255,255,0.4); border-radius: var(--radius); cursor: pointer; transition: all 0.18s; margin-left: 0.3rem; }
+.tsm:hover { border-color: var(--gold-border); color: var(--gold-border); }
+.tsm.del:hover { border-color: #e07060; color: #e07060; }
+.empty-box { text-align: center; padding: 3.5rem 2rem; color: rgba(255,255,255,0.2); font-size: 0.85rem; }
+.settings-panel { max-width: 420px; }
+.s-card { background: #161614; border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); padding: 1.75rem; margin-bottom: 1.25rem; }
+.s-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 400; color: #fff; margin-bottom: 1.4rem; }
+.s-field { margin-bottom: 1rem; }
+.s-field label { display: block; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 0.38rem; }
+.s-field input { font-family: 'Outfit', sans-serif; width: 100%; padding: 0.72rem 0.9rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius); color: #fff; font-size: 0.88rem; outline: none; transition: border-color 0.18s; }
+.s-field input:focus { border-color: var(--gold-border); }
+.s-field input::placeholder { color: rgba(255,255,255,0.18); }
+.s-btn { font-family: 'Outfit', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.68rem 1.5rem; background: var(--gold); color: var(--ink); border: none; border-radius: var(--radius); cursor: pointer; transition: background 0.18s; }
+.s-btn:hover { background: #a07e20; }
+.s-msg { margin-top: 0.6rem; font-size: 0.78rem; display: none; }
+
+/* ─── MODAL ─── */
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 500; display: none; align-items: center; justify-content: center; padding: 2rem; }
+.modal-bg.open { display: flex; }
+.modal-box { background: #1a1a17; border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius); padding: 2.25rem; max-width: 580px; width: 100%; max-height: 85vh; overflow-y: auto; }
+.modal-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-weight: 400; color: #fff; margin-bottom: 1.4rem; }
+.m-row { display: flex; justify-content: space-between; padding: 0.65rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.82rem; }
+.m-row:last-of-type { border-bottom: none; }
+.m-row .mk { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.28); }
+.m-row .mv { color: rgba(255,255,255,0.65); max-width: 58%; text-align: right; }
+.m-sig { margin-top: 1.1rem; }
+.m-sig img { width: 100%; border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); }
+.m-close { margin-top: 1.4rem; font-family: 'Outfit', sans-serif; font-size: 0.72rem; font-weight: 400; letter-spacing: 0.09em; text-transform: uppercase; padding: 0.55rem 1.25rem; background: none; border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.4); border-radius: var(--radius); cursor: pointer; transition: all 0.18s; }
+.m-close:hover { border-color: var(--gold-border); color: var(--gold-border); }
+
+/* ─── TOAST ─── */
+#toast { position: fixed; bottom: 1.75rem; left: 50%; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 0.75rem 1.75rem; border-radius: var(--radius); font-size: 0.82rem; font-weight: 300; opacity: 0; pointer-events: none; transition: opacity 0.25s; z-index: 999; border-left: 3px solid var(--gold); white-space: nowrap; }
+#toast.show { opacity: 1; }
+#toast.err { border-left-color: var(--red); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 480px) {
+  .auth-card { padding: 2rem 1.5rem; }
+  .f-card { padding: 1.4rem; }
+  .admin-body { padding: 1.25rem 1rem; }
+  thead th, tbody td { padding: 0.65rem 0.75rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════ NAV ══════════════════════════════ -->
+<nav id="nav">
+  <div class="nav-brand">Johnston <em>Media</em></div>
+  <div class="nav-actions" id="nav-actions"></div>
+</nav>
+
+<!-- ══════════════════════════════ REGISTER ══════════════════════════════ -->
+<section class="page" id="register-page">
+  <div class="auth-outer">
+    <div class="auth-card">
+      <h2>Create account</h2>
+      <p class="sub">Sign up to submit and manage your consent with Johnston Media.</p>
+      <button class="google-btn" onclick="googleAuth()">
+        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
+      </button>
+      <div class="auth-divider"><span>or</span></div>
+      <div class="auth-field"><label>Full name</label><input type="text" id="reg-name" placeholder="Jane Smith" autocomplete="name"></div>
+      <div class="auth-field"><label>Email</label><input type="email" id="reg-email" placeholder="you@example.com" autocomplete="email"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="reg-pass" placeholder="Min. 6 characters" autocomplete="new-password"></div>
+      <div class="auth-err" id="reg-err"></div>
+      <button class="btn-full" onclick="doRegister()">Create account</button>
+      <div class="auth-switch">Already have an account? <a onclick="show('login-page')">Sign in</a></div>
+      <div class="auth-switch" style="margin-top:0.5rem"><a onclick="show('admin-login-page')">Admin access →</a></div>
+      <div class="auth-switch" style="margin-top:0.5rem"><a onclick="show('privacy-page')">Privacy Policy</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ LOGIN ══════════════════════════════ -->
+<section class="page hidden" id="login-page">
+  <div class="auth-outer">
+    <div class="auth-card">
+      <h2>Welcome back</h2>
+      <p class="sub">Sign in to view or update your consent form.</p>
+      <button class="google-btn" onclick="googleAuth()">
+        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
+      </button>
+      <div class="auth-divider"><span>or</span></div>
+      <div class="auth-field"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com" autocomplete="email"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <div class="auth-err" id="login-err"></div>
+      <button class="btn-full" onclick="doLogin()">Sign in</button>
+      <div class="auth-switch">No account? <a onclick="show('register-page')">Create one</a></div>
+      <div class="auth-switch" style="margin-top:0.5rem"><a onclick="show('admin-login-page')">Admin access →</a></div>
+      <div class="auth-switch" style="margin-top:0.5rem"><a onclick="show('privacy-page')">Privacy Policy</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ ROLE PICKER ══════════════════════════════ -->
+<section class="page hidden" id="role-page">
+  <div class="role-hero">
+    <p class="eyebrow">Johnston Media · NSW</p>
+    <h1>Social Media<br>Consent Form</h1>
+    <p>Select the option that applies to you to get started.</p>
+  </div>
+  <div class="role-grid">
+    <div class="role-card" onclick="startForm('parent')">
+      <span class="rc-icon">👨‍👧</span>
+      <h3>Parent or Guardian</h3>
+      <p>I am signing this form on behalf of my child who will be photographed or filmed.</p>
+      <span class="tag">Signing for a minor</span>
+    </div>
+    <div class="role-card" onclick="startForm('self')">
+      <span class="rc-icon">🙋</span>
+      <h3>Signing for Myself</h3>
+      <p>I am an adult participant and granting consent for my own image and likeness.</p>
+      <span class="tag">Personal consent</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ PARENT FORM ══════════════════════════════ -->
+<section class="page hidden form-page" id="parent-form-page">
+  <div class="form-hero">
+    <p class="eyebrow">Parent / Guardian Consent</p>
+    <h2>Consent on Behalf of a Child</h2>
+    <p>All fields marked * are required. You can update or withdraw at any time.</p>
+    <button class="back-btn" onclick="show('role-page')">← Change selection</button>
+  </div>
+  <div class="form-wrap">
+    <div class="f-card">
+      <div class="f-section-label">Parent / Guardian details</div>
+      <div class="f-grid">
+        <div class="f-field"><label>First name *</label><input type="text" id="p-pfirst" placeholder="Jane"></div>
+        <div class="f-field"><label>Last name *</label><input type="text" id="p-plast" placeholder="Smith"></div>
+        <div class="f-field"><label>Email *</label><input type="email" id="p-pemail" placeholder="jane@example.com"></div>
+        <div class="f-field"><label>Phone</label><input type="tel" id="p-pphone" placeholder="04XX XXX XXX"></div>
+        <div class="f-field"><label>Relationship *</label>
+          <select id="p-rel">
+            <option value="">Select…</option>
+            <option>Parent</option><option>Guardian</option><option>Carer</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="f-card">
+      <div class="f-section-label">Student details</div>
+      <div class="f-grid">
+        <div class="f-field"><label>Student first name *</label><input type="text" id="p-sfirst" placeholder="Alex"></div>
+        <div class="f-field"><label>Student last name *</label><input type="text" id="p-slast" placeholder="Smith"></div>
+        <div class="f-field"><label>School *</label><input type="text" id="p-school" placeholder="e.g. Sydney High School"></div>
+        <div class="f-field"><label>Sport / Team *</label><input type="text" id="p-sport" placeholder="e.g. Year 11 Rugby League"></div>
+        <div class="f-field"><label>Year level</label>
+          <select id="p-grade">
+            <option value="">Select…</option>
+            <option>Year 7</option><option>Year 8</option><option>Year 9</option>
+            <option>Year 10</option><option>Year 11</option><option>Year 12</option>
+          </select>
+        </div>
+        <div class="f-field"><label>Date of birth</label><input type="date" id="p-dob"></div>
+      </div>
+    </div>
+    <div class="f-card">
+      <div class="f-section-label">Consent permissions</div>
+      <p style="font-size:0.82rem;color:var(--ink-mid);margin-bottom:1rem;line-height:1.65;">Select everything you consent to. You may withdraw any permissions at any time.</p>
+      <div class="consent-list">
+        <label class="consent-row"><input type="checkbox" id="p-c1"><div class="consent-row-text"><strong>Instagram &amp; Facebook</strong>Photos and video of my child may be shared on Johnston Media's Instagram and Facebook.</div></label>
+        <label class="consent-row"><input type="checkbox" id="p-c2"><div class="consent-row-text"><strong>Website &amp; online galleries</strong>Media may appear on the Johnston Media website or client online galleries.</div></label>
+        <label class="consent-row"><input type="checkbox" id="p-c3"><div class="consent-row-text"><strong>School &amp; club use</strong>The school or sporting club may use media for their own social media, website, or newsletters.</div></label>
+        <label class="consent-row"><input type="checkbox" id="p-c4"><div class="consent-row-text"><strong>Commercial &amp; promotional</strong>Media may be used in Johnston Media's promotional materials, printed and digital.</div></label>
+        <label class="consent-row"><input type="checkbox" id="p-c5"><div class="consent-row-text"><strong>Name in captions</strong>My child's first name may appear in captions or tags alongside media.</div></label>
+      </div>
+    </div>
+    <div class="f-card">
+      <div class="f-section-label">Special instructions (optional)</div>
+      <div class="f-field"><label>Any restrictions or notes for Johnston Media</label>
+        <textarea id="p-notes" placeholder="e.g. Please avoid close-up facial shots, or do not tag personal accounts…"></textarea>
+      </div>
+    </div>
+    <div class="opt-out-box">
+      <strong>Six-month consent period.</strong> This consent is valid for six months from the date of signing. You will be notified before it expires. You may opt out at any time by logging in and withdrawing consent, or by emailing <strong>wjohnston.media@gmail.com</strong>.
+    </div>
+    <div class="f-card">
+      <div class="f-section-label">Signature</div>
+      <p style="font-size:0.82rem;color:var(--ink-mid);margin-bottom:0.85rem;line-height:1.65;">By signing, I confirm I am the parent or legal guardian named above and am authorised to grant these permissions.</p>
+      <canvas class="sig-pad" id="sig-parent"></canvas>
+      <button class="sig-clear" onclick="clearSig('parent')">Clear signature</button>
+      <p style="font-size:0.72rem;color:var(--ink-light);margin-top:0.85rem;">Date: <span id="p-date"></span></p>
+    </div>
+    <div class="f-card" style="border-color:var(--gold-pale);">
+      <div class="f-section-label">Age confirmation</div>
+      <label class="age-confirm-row">
+        <input type="checkbox" id="p-age">
+        <span>I confirm I am 18 years of age or older and have the legal authority to sign this consent form on behalf of the student named above.</span>
+      </label>
+    </div>
+    <button class="submit-btn" onclick="submitForm('parent')">Submit consent form</button>
+    <p class="legal-note">Johnston Media · NSW · Consent valid 6 months from signing · Opt-out anytime · wjohnston.media@gmail.com · <a onclick="show('privacy-page')" style="color:var(--gold);cursor:pointer;text-decoration:none;">Privacy Policy</a></p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ SELF FORM ══════════════════════════════ -->
+<section class="page hidden form-page" id="self-form-page">
+  <div class="form-hero">
+    <p class="eyebrow">Personal Consent</p>
+    <h2>Your Personal Consent</h2>
+    <p>All fields marked * are required. You can update or withdraw at any time.</p>
+    <button class="back-btn" onclick="show('role-page')">← Change selection</button>
+  </div>
+  <div class="form-wrap">
+    <div class="f-card">
+      <div class="f-section-label">Your details</div>
+      <div class="f-grid">
+        <div class="f-field"><label>First name *</label><input type="text" id="s-first" placeholder="Alex"></div>
+        <div class="f-field"><label>Last name *</label><input type="text" id="s-last" placeholder="Johnson"></div>
+        <div class="f-field"><label>Email *</label><input type="email" id="s-email" placeholder="alex@example.com"></div>
+        <div class="f-field"><label>Phone</label><input type="tel" id="s-phone" placeholder="04XX XXX XXX"></div>
+        <div class="f-field"><label>Date of birth</label><input type="date" id="s-dob"></div>
+      </div>
+    </div>
+    <div class="f-card">
+      <div class="f-section-label">Event / team details</div>
+      <div class="f-grid">
+        <div class="f-field"><label>School or organisation *</label><input type="text" id="s-school" placeholder="e.g. Sydney High School"></div>
+        <div class="f-field"><label>Sport / Team *</label><input type="text" id="s-sport" placeholder="e.g. Senior Rugby League"></div>
+      </div>
+    </div>
+    <div class="f-card">
+      <div class="f-section-label">Consent permissions</div>
+      <p style="font-size:0.82rem;color:var(--ink-mid);margin-bottom:1rem;line-height:1.65;">Select everything you consent to. You may withdraw any permissions at any time.</p>
+      <div class="consent-list">
+        <label class="consent-row"><input type="checkbox" id="s-c1"><div class="consent-row-text"><strong>Instagram &amp; Facebook</strong>My photos and video may be shared on Johnston Media's Instagram and Facebook.</div></label>
+        <label class="consent-row"><input type="checkbox" id="s-c2"><div class="consent-row-text"><strong>Website &amp; online galleries</strong>My media may appear on the Johnston Media website or client online galleries.</div></label>
+        <label class="consent-row"><input type="checkbox" id="s-c3"><div class="consent-row-text"><strong>School &amp; club use</strong>The school or sporting club may use my media for their own social media, website, or newsletters.</div></label>
+        <label class="consent-row"><input type="checkbox" id="s-c4"><div class="consent-row-text"><strong>Commercial &amp; promotional</strong>My media may be used in Johnston Media's promotional materials, printed and digital.</div></label>
+        <label class="consent-row"><input type="checkbox" id="s-c5"><div class="consent-row-text"><strong>Name in captions</strong>My first name may appear in captions or tags alongside media.</div></label>
+      </div>
+    </div>
+    <div class="f-card">
+      <div class="f-section-label">Special instructions (optional)</div>
+      <div class="f-field"><label>Any restrictions or notes</label>
+        <textarea id="s-notes" placeholder="e.g. Please do not tag my personal accounts…"></textarea>
+      </div>
+    </div>
+    <div class="opt-out-box">
+      <strong>Six-month consent period.</strong> This consent is valid for six months from the date of signing. You will be notified before it expires. You may opt out at any time by logging in and withdrawing consent, or by emailing <strong>wjohnston.media@gmail.com</strong>.
+    </div>
+    <div class="f-card">
+      <div class="f-section-label">Signature</div>
+      <p style="font-size:0.82rem;color:var(--ink-mid);margin-bottom:0.85rem;line-height:1.65;">By signing, I confirm I am the person named above and am granting these permissions for my own image and likeness.</p>
+      <canvas class="sig-pad" id="sig-self"></canvas>
+      <button class="sig-clear" onclick="clearSig('self')">Clear signature</button>
+      <p style="font-size:0.72rem;color:var(--ink-light);margin-top:0.85rem;">Date: <span id="s-date"></span></p>
+    </div>
+    <div class="f-card" style="border-color:var(--gold-pale);">
+      <div class="f-section-label">Age confirmation</div>
+      <label class="age-confirm-row">
+        <input type="checkbox" id="s-age">
+        <span>I confirm I am 18 years of age or older and am legally capable of entering into this consent agreement on my own behalf.</span>
+      </label>
+    </div>
+    <button class="submit-btn" onclick="submitForm('self')">Submit consent form</button>
+    <p class="legal-note">Johnston Media · NSW · Consent valid 6 months from signing · Opt-out anytime · wjohnston.media@gmail.com · <a onclick="show('privacy-page')" style="color:var(--gold);cursor:pointer;text-decoration:none;">Privacy Policy</a></p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ SUCCESS ══════════════════════════════ -->
+<section class="page hidden" id="success-page">
+  <div class="success-inner">
+    <div class="success-mark">✦</div>
+    <h2>Consent received</h2>
+    <p>Your form has been submitted. You can update or withdraw your consent at any time from your account.</p>
+    <div class="expiry-pill" id="expiry-pill"></div>
+    <button class="go-dashboard" onclick="show('dashboard-page');renderDashboard()">View my consent →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ MY CONSENT DASHBOARD ══════════════════════════════ -->
+<section class="page hidden" id="dashboard-page">
+  <div class="dash-wrap">
+    <h2>My consent</h2>
+    <p class="sub">View, edit, or withdraw your active consent form.</p>
+    <div id="dashboard-body"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ PRIVACY POLICY ══════════════════════════════ -->
+<section class="page hidden" id="privacy-page">
+  <div class="privacy-wrap">
+    <p class="eyebrow">Johnston Media · NSW</p>
+    <h1>Privacy Policy</h1>
+    <p class="privacy-meta">Last updated: <span id="privacy-date"></span></p>
+    <div class="privacy-highlight">
+      We keep this simple: we only collect what we need to run this consent form, we never share your personal information publicly, and all data is deleted when your consent expires.
+    </div>
+    <div class="privacy-section">
+      <h2>Who we are</h2>
+      <p>Johnston Media is a photography and videography business based in New South Wales, Australia. This consent form is operated by Johnston Media for the purpose of obtaining and managing social media consent from participants and their parents or guardians.</p>
+      <p>For any privacy enquiries, contact us at <strong>wjohnston.media@gmail.com</strong>.</p>
+    </div>
+    <div class="privacy-section">
+      <h2>What information we collect</h2>
+      <p>We collect only the minimum information necessary to operate this consent form:</p>
+      <ul>
+        <li>Your name and email address to create and identify your account</li>
+        <li>For parent/guardian forms: the student's name, school, sport or team, year level, and date of birth</li>
+        <li>For personal consent forms: your name, email, phone number, date of birth, school or organisation, and sport or team</li>
+        <li>Your consent selections (which permissions you have granted)</li>
+        <li>Your digital signature and the date it was provided</li>
+        <li>Any special instructions or restrictions you choose to include</li>
+      </ul>
+    </div>
+    <div class="privacy-section">
+      <h2>How we use your information</h2>
+      <p>Your information is used solely to:</p>
+      <ul>
+        <li>Maintain your account so you can log in, view, edit, or withdraw your consent at any time</li>
+        <li>Record a valid consent that Johnston Media can refer to before publishing any media</li>
+        <li>Allow Johnston Media to understand the permissions you have and have not granted</li>
+      </ul>
+      <p>We do not use your information for marketing, advertising, or any purpose unrelated to managing your consent.</p>
+    </div>
+    <div class="privacy-section">
+      <h2>How long we keep your data</h2>
+      <p>Your personal information is stored only for the duration of your active consent period — <strong>six months from the date you signed the form</strong>. Once your consent expires or you withdraw it, your data is no longer required and will be removed.</p>
+      <p>Your account credentials (email and password) are stored in your browser's local storage on your own device. They are not held on external servers unless this site is connected to a backend database in a future update.</p>
+    </div>
+    <div class="privacy-section">
+      <h2>Who can see your information</h2>
+      <p>Your personal information is <strong>never shared publicly</strong>. Access is strictly limited to:</p>
+      <ul>
+        <li>You — via your personal account dashboard</li>
+        <li>The Johnston Media administrator — solely for the purpose of verifying consent before publishing media</li>
+      </ul>
+      <p>We do not sell, rent, trade, or disclose your personal information to any third parties, advertisers, or external organisations.</p>
+    </div>
+    <div class="privacy-section">
+      <h2>Your rights</h2>
+      <p>You have the right to:</p>
+      <ul>
+        <li>Access the information we hold about you at any time via your account dashboard</li>
+        <li>Correct any inaccurate information by editing your consent form</li>
+        <li>Withdraw your consent at any time, which stops Johnston Media from using new media of you or your child going forward</li>
+        <li>Request deletion of your data by contacting us directly</li>
+      </ul>
+      <p>To exercise any of these rights, log in to your account or contact us at <strong>wjohnston.media@gmail.com</strong>.</p>
+    </div>
+    <div class="privacy-section">
+      <h2>Cookies &amp; tracking</h2>
+      <p>This site does not use cookies or any third-party tracking tools. Account data is stored locally in your browser (localStorage) on your own device and is not transmitted to any external server.</p>
+    </div>
+    <div class="privacy-section">
+      <h2>Changes to this policy</h2>
+      <p>If we update this privacy policy, the revised version will be posted on this page with an updated date. We encourage you to review it periodically. Continued use of this consent form after any changes constitutes your acceptance of the updated policy.</p>
+    </div>
+    <div class="privacy-contact">
+      Questions about this privacy policy? Contact Johnston Media at <a href="mailto:wjohnston.media@gmail.com">wjohnston.media@gmail.com</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ ADMIN LOGIN ══════════════════════════════ -->
+<section class="page hidden" id="admin-login-page">
+  <div class="auth-outer" style="background:#0A0A08;">
+    <div class="auth-card">
+      <h2>Admin access</h2>
+      <p class="sub">Johnston Media — Consent Manager</p>
+      <div class="auth-field"><label>Email</label><input type="email" id="adm-email" placeholder="wjohnston.media@gmail.com" autocomplete="email"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="adm-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAdminLogin()"></div>
+      <div class="auth-err" id="adm-err">Incorrect credentials.</div>
+      <button class="btn-full" onclick="doAdminLogin()">Sign in to admin</button>
+      <div class="auth-switch"><a onclick="show('login-page')">← Back to user login</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ ADMIN DASHBOARD ══════════════════════════════ -->
+<section class="page hidden" id="admin-page">
+  <div class="admin-body" style="padding-top:2rem;">
+    <div class="admin-section active" id="asec-submissions">
+      <div class="stats-grid" id="admin-stats"></div>
+      <div class="table-card">
+        <div class="table-head">
+          <h3>Consent submissions</h3>
+          <input class="search-box" id="admin-search" placeholder="Search name, school…" oninput="renderAdminTable()">
+        </div>
+        <div id="admin-table-body"></div>
+      </div>
+    </div>
+    <div class="admin-section settings-panel" id="asec-settings">
+      <div class="s-card">
+        <h3>Change password</h3>
+        <div class="s-field"><label>Current password</label><input type="password" id="s-cur" placeholder="••••••••"></div>
+        <div class="s-field"><label>New password</label><input type="password" id="s-new" placeholder="••••••••"></div>
+        <div class="s-field"><label>Confirm new password</label><input type="password" id="s-conf" placeholder="••••••••"></div>
+        <button class="s-btn" onclick="changeAdminPass()">Update password</button>
+        <div class="s-msg" id="s-msg"></div>
+      </div>
+      <div class="s-card">
+        <h3>Export data</h3>
+        <p style="color:rgba(255,255,255,0.35);font-size:0.84rem;margin-bottom:1.4rem;line-height:1.6;">Download all consent submissions as a CSV file.</p>
+        <button class="s-btn" onclick="exportCSV()">Download CSV</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ MODAL ══════════════════════════════ -->
+<div class="modal-bg" id="modal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <h3 id="modal-title"></h3>
+    <div id="modal-body"></div>
+    <div class="m-sig" id="modal-sig"></div>
+    <button class="m-close" onclick="closeModalDirect()">Close</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+const ADMIN_EMAIL = 'wjohnston.media@gmail.com';
+let adminPass = localStorage.getItem('jm_admp') || 'Johnston2024!';
+let users = JSON.parse(localStorage.getItem('jm_users') || '[]');
+let subs = JSON.parse(localStorage.getItem('jm_subs') || '[]');
+let me = null;
+let adminMode = false;
+const sigs = {};
+
+function saveUsers() { localStorage.setItem('jm_users', JSON.stringify(users)); }
+function saveSubs() { localStorage.setItem('jm_subs', JSON.stringify(subs)); }
+
+// ══════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════
+function show(id) {
+  document.querySelectorAll('section.page').forEach(s => s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  window.scrollTo(0, 0);
+  renderNav();
+}
+
+function renderNav() {
+  const nav = document.getElementById('nav');
+  const acts = document.getElementById('nav-actions');
+  if (adminMode) {
+    nav.style.background = '#111110';
+    acts.innerHTML = `
+      <button class="atab active" onclick="showAdminSec('submissions',this)">Submissions</button>
+      <button class="atab" onclick="showAdminSec('settings',this)">Settings</button>
+      <button class="nav-btn" onclick="adminLogout()" style="color:rgba(255,255,255,0.35);font-size:0.7rem;">Sign out</button>`;
+  } else {
+    nav.style.background = '';
+    if (me) {
+      acts.innerHTML = `
+        <span id="nav-user-name">${me.name.split(' ')[0]}</span>
+        <button class="nav-btn" onclick="show('dashboard-page');renderDashboard()">My consent</button>
+        <button class="nav-btn" onclick="show('privacy-page')">Privacy</button>
+        <button class="nav-btn" onclick="logout()">Sign out</button>`;
+    } else {
+      acts.innerHTML = `
+        <button class="nav-btn" onclick="show('privacy-page')">Privacy</button>
+        <button class="nav-btn" onclick="show('login-page')">Sign in</button>
+        <button class="nav-btn primary" onclick="show('register-page')">Register</button>`;
+    }
+  }
+}
+
+// ══════════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════════
+function doRegister() {
+  const name = g('reg-name').value.trim();
+  const email = g('reg-email').value.trim().toLowerCase();
+  const pass = g('reg-pass').value;
+  const err = g('reg-err');
+  err.style.display = 'none';
+  if (!name || !email || !pass) { showErr(err, 'All fields are required.'); return; }
+  if (pass.length < 6) { showErr(err, 'Password must be at least 6 characters.'); return; }
+  if (users.find(u => u.email === email)) { showErr(err, 'An account with this email already exists.'); return; }
+  const user = { id: Date.now(), name, email, password: pass };
+  users.push(user); saveUsers();
+  me = user;
+  afterLogin();
+}
+
+function doLogin() {
+  const email = g('login-email').value.trim().toLowerCase();
+  const pass = g('login-pass').value;
+  const err = g('login-err');
+  err.style.display = 'none';
+  const user = users.find(u => u.email === email && u.password === pass);
+  if (!user) { showErr(err, 'Incorrect email or password.'); return; }
+  me = user;
+  afterLogin();
+}
+
+function googleAuth() {
+  // NOTE: Replace this with real Firebase/Google OAuth when deploying
+  const demoEmail = 'google.demo@gmail.com';
+  let user = users.find(u => u.email === demoEmail);
+  if (!user) {
+    user = { id: Date.now(), name: 'Google User', email: demoEmail, isGoogle: true };
+    users.push(user); saveUsers();
+  }
+  me = user;
+  toast('Signed in with Google (demo mode)');
+  afterLogin();
+}
+
+function afterLogin() {
+  renderNav();
+  const active = subs.find(s => s.userId === me.id && s.active);
+  if (active) { show('dashboard-page'); renderDashboard(); }
+  else { show('role-page'); }
+}
+
+function logout() { me = null; renderNav(); show('login-page'); }
+
+function doAdminLogin() {
+  const email = g('adm-email').value.trim();
+  const pass = g('adm-pass').value;
+  const err = g('adm-err');
+  if (email === ADMIN_EMAIL && pass === adminPass) {
+    err.style.display = 'none';
+    adminMode = true;
+    show('admin-page');
+    updateAdminStats();
+    renderAdminTable();
+  } else {
+    err.style.display = 'block';
+  }
+}
+
+function adminLogout() { adminMode = false; renderNav(); show('login-page'); }
+function showErr(el, msg) { el.textContent = msg; el.style.display = 'block'; }
+
+// ══════════════════════════════════════════════
+// FORM INIT & SIGNATURE PADS
+// ══════════════════════════════════════════════
+function startForm(type) {
+  if (!me) { show('login-page'); return; }
+  const dateStr = new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+  if (type === 'parent') {
+    g('p-date').textContent = dateStr;
+    g('p-pemail').value = me.email || '';
+    initSig('parent', 'sig-parent');
+    show('parent-form-page');
+  } else {
+    g('s-date').textContent = dateStr;
+    g('s-email').value = me.email || '';
+    const parts = (me.name || '').split(' ');
+    g('s-first').value = parts[0] || '';
+    g('s-last').value = parts.slice(1).join(' ') || '';
+    initSig('self', 'sig-self');
+    show('self-form-page');
+  }
+}
+
+function initSig(key, canvasId) {
+  const canvas = g(canvasId);
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr || 680 * dpr;
+  canvas.height = 150 * dpr;
+  ctx.scale(dpr, dpr);
+  ctx.strokeStyle = '#1C1C1A'; ctx.lineWidth = 1.8; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  sigs[key] = { canvas, ctx, drawing: false, hasSig: false };
+  function pos(e) { const r = canvas.getBoundingClientRect(); if (e.touches) return { x: e.touches[0].clientX - r.left, y: e.touches[0].clientY - r.top }; return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+  canvas.onmousedown = e => { sigs[key].drawing = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); };
+  canvas.onmousemove = e => { if (!sigs[key].drawing) return; sigs[key].hasSig = true; const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); };
+  canvas.onmouseup = canvas.onmouseleave = () => sigs[key].drawing = false;
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); sigs[key].drawing = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); }, { passive: false });
+  canvas.addEventListener('touchmove', e => { e.preventDefault(); if (!sigs[key].drawing) return; sigs[key].hasSig = true; const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }, { passive: false });
+  canvas.addEventListener('touchend', () => sigs[key].drawing = false);
+}
+
+function clearSig(key) { const s = sigs[key]; if (s) { s.ctx.clearRect(0, 0, s.canvas.width, s.canvas.height); s.hasSig = false; } }
+
+// ══════════════════════════════════════════════
+// FORM SUBMIT
+// ══════════════════════════════════════════════
+function submitForm(type) {
+  const now = new Date();
+  const expiry = new Date(now); expiry.setMonth(expiry.getMonth() + 6);
+  if (type === 'parent') {
+    const pf = val('p-pfirst'), pl = val('p-plast'), pe = val('p-pemail'), rel = val('p-rel');
+    const sf = val('p-sfirst'), sl = val('p-slast'), sch = val('p-school'), spt = val('p-sport');
+    if (!pf||!pl||!pe||!rel||!sf||!sl||!sch||!spt) { toast('Please fill in all required fields.', true); return; }
+    if (!sigs.parent?.hasSig) { toast('Please sign the form before submitting.', true); return; }
+    if (!g('p-age').checked) { toast('Please confirm you are 18 or older.', true); return; }
+    if (!['p-c1','p-c2','p-c3','p-c4','p-c5'].some(id => g(id).checked)) { toast('Please select at least one consent option.', true); return; }
+    saveEntry({
+      id: Date.now(), userId: me.id, type: 'parent',
+      date: now.toISOString(), expiry: expiry.toISOString(), active: true,
+      parentName: pf+' '+pl, parentEmail: pe, parentPhone: val('p-pphone'), relationship: rel,
+      studentName: sf+' '+sl, school: sch, sport: spt, grade: val('p-grade'), dob: val('p-dob'),
+      consents: { instagram: cb('p-c1'), website: cb('p-c2'), schoolUse: cb('p-c3'), commercial: cb('p-c4'), nameTag: cb('p-c5') },
+      notes: val('p-notes'), signature: sigs.parent.canvas.toDataURL()
+    }, expiry);
+  } else {
+    const sf = val('s-first'), sl = val('s-last'), se = val('s-email'), sch = val('s-school'), spt = val('s-sport');
+    if (!sf||!sl||!se||!sch||!spt) { toast('Please fill in all required fields.', true); return; }
+    if (!sigs.self?.hasSig) { toast('Please sign the form before submitting.', true); return; }
+    if (!g('s-age').checked) { toast('Please confirm you are 18 or older.', true); return; }
+    if (!['s-c1','s-c2','s-c3','s-c4','s-c5'].some(id => g(id).checked)) { toast('Please select at least one consent option.', true); return; }
+    saveEntry({
+      id: Date.now(), userId: me.id, type: 'self',
+      date: now.toISOString(), expiry: expiry.toISOString(), active: true,
+      subjectName: sf+' '+sl, email: se, phone: val('s-phone'), dob: val('s-dob'),
+      school: sch, sport: spt,
+      consents: { instagram: cb('s-c1'), website: cb('s-c2'), schoolUse: cb('s-c3'), commercial: cb('s-c4'), nameTag: cb('s-c5') },
+      notes: val('s-notes'), signature: sigs.self.canvas.toDataURL()
+    }, expiry);
+  }
+}
+
+function saveEntry(entry, expiry) {
+  subs = subs.map(s => s.userId === me.id ? { ...s, active: false } : s);
+  subs.push(entry); saveSubs();
+  g('expiry-pill').textContent = 'Consent expires ' + expiry.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+  show('success-page');
+}
+
+function val(id) { return g(id).value.trim(); }
+function cb(id) { return g(id).checked; }
+function g(id) { return document.getElementById(id); }
+
+// ══════════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════════
+function renderDashboard() {
+  if (!me) { show('login-page'); return; }
+  const body = g('dashboard-body');
+  const active = subs.find(s => s.userId === me.id && s.active);
+  if (!active) {
+    body.innerHTML = `<div class="no-consent-box"><p>You don't have an active consent form on file.</p><button class="dash-btn primary" onclick="show('role-page')">Submit consent form</button></div>`;
+    return;
+  }
+  const now = new Date();
+  const expDate = new Date(active.expiry);
+  const isExp = expDate < now;
+  const totalMs = expDate - new Date(active.date);
+  const pct = Math.min(100, Math.round(((now - new Date(active.date)) / totalMs) * 100));
+  const daysLeft = Math.max(0, Math.round((expDate - now) / 86400000));
+  const name = active.type === 'parent' ? active.studentName : active.subjectName;
+  const consentLabels = { instagram: 'Instagram & FB', website: 'Website', schoolUse: 'School/Club', commercial: 'Commercial', nameTag: 'Name tags' };
+  const granted = Object.entries(active.consents).filter(([,v]) => v).map(([k]) => consentLabels[k]).join(', ') || 'None';
+  body.innerHTML = `
+    <div class="status-card">
+      <div class="status-row"><span class="status-key">Status</span><span class="status-val"><span class="badge ${isExp ? 'badge-expired' : 'badge-active'}">${isExp ? 'Expired' : 'Active'}</span></span></div>
+      <div class="status-row"><span class="status-key">Form type</span><span class="status-val">${active.type === 'parent' ? 'Parent / Guardian' : 'Personal'}</span></div>
+      <div class="status-row"><span class="status-key">${active.type === 'parent' ? 'Student' : 'Name'}</span><span class="status-val">${name}</span></div>
+      <div class="status-row"><span class="status-key">School / Organisation</span><span class="status-val">${active.school}</span></div>
+      <div class="status-row"><span class="status-key">Sport / Team</span><span class="status-val">${active.sport}</span></div>
+      <div class="status-row"><span class="status-key">Signed</span><span class="status-val">${new Date(active.date).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}</span></div>
+      <div class="status-row"><span class="status-key">Expires</span><span class="status-val">${expDate.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}</span></div>
+      <div class="status-row"><span class="status-key">Permissions granted</span><span class="status-val" style="text-align:right;max-width:60%;">${granted}</span></div>
+      ${active.notes ? `<div class="status-row"><span class="status-key">Notes</span><span class="status-val" style="text-align:right;max-width:60%;">${active.notes}</span></div>` : ''}
+      <div class="bar-wrap">
+        <div class="bar-labels"><span>Signed</span><span>${isExp ? 'Expired' : daysLeft + ' days remaining'}</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+      </div>
+    </div>
+    <div class="dash-actions">
+      <button class="dash-btn primary" onclick="startForm('${active.type}')">Edit my consent</button>
+      <button class="dash-btn danger" onclick="optOut(${active.id})">Withdraw consent</button>
+    </div>`;
+}
+
+function optOut(id) {
+  if (!confirm('Are you sure you want to withdraw your consent?')) return;
+  subs = subs.map(s => s.id === id ? { ...s, active: false, withdrawn: true } : s);
+  saveSubs();
+  toast('Consent withdrawn successfully.');
+  renderDashboard();
+}
+
+// ══════════════════════════════════════════════
+// ADMIN
+// ══════════════════════════════════════════════
+function updateAdminStats() {
+  const now = new Date();
+  const active = subs.filter(s => s.active && new Date(s.expiry) > now).length;
+  const expired = subs.filter(s => s.active && new Date(s.expiry) <= now).length;
+  const schools = new Set(subs.map(s => s.school)).size;
+  g('admin-stats').innerHTML = `
+    <div class="stat-box"><div class="lbl">Total</div><div class="val gold">${subs.length}</div></div>
+    <div class="stat-box"><div class="lbl">Active</div><div class="val">${active}</div></div>
+    <div class="stat-box"><div class="lbl">Expired</div><div class="val">${expired}</div></div>
+    <div class="stat-box"><div class="lbl">Schools</div><div class="val">${schools}</div></div>`;
+}
+
+function renderAdminTable() {
+  const q = (g('admin-search')?.value || '').toLowerCase();
+  const now = new Date();
+  const filtered = subs.filter(s => {
+    const n = (s.subjectName || s.studentName || '').toLowerCase();
+    return n.includes(q) || (s.school || '').toLowerCase().includes(q) || (s.parentName || '').toLowerCase().includes(q);
+  });
+  const body = g('admin-table-body');
+  if (!filtered.length) { body.innerHTML = `<div class="empty-box">${subs.length === 0 ? 'No submissions yet.' : 'No results.'}</div>`; return; }
+  body.innerHTML = `<table><thead><tr>
+    <th>Date</th><th>Type</th><th>Name</th><th>School</th><th>Sport</th><th>Instagram</th><th>Status</th><th>Actions</th>
+  </tr></thead><tbody>${filtered.map(s => {
+    const isExp = new Date(s.expiry) < now;
+    const name = s.type === 'parent' ? s.studentName : s.subjectName;
+    const statusBadge = !s.active && s.withdrawn ? '<span class="tbadge tbadge-wth">Withdrawn</span>' : isExp ? '<span class="tbadge tbadge-exp">Expired</span>' : '<span class="tbadge tbadge-act">Active</span>';
+    return `<tr>
+      <td>${new Date(s.date).toLocaleDateString('en-AU')}</td>
+      <td>${s.type === 'parent' ? 'Parent' : 'Self'}</td>
+      <td>${name}</td>
+      <td>${s.school}</td>
+      <td>${s.sport}</td>
+      <td><span class="tbadge ${s.consents.instagram ? 'tbadge-yes' : 'tbadge-no'}">${s.consents.instagram ? 'Yes' : 'No'}</span></td>
+      <td>${statusBadge}</td>
+      <td>
+        <button class="tsm" onclick="viewSub(${s.id})">View</button>
+        <button class="tsm del" onclick="delSub(${s.id})">Delete</button>
+      </td>
+    </tr>`;
+  }).join('')}</tbody></table>`;
+}
+
+function viewSub(id) {
+  const s = subs.find(x => x.id === id); if (!s) return;
+  const name = s.type === 'parent' ? s.studentName : s.subjectName;
+  g('modal-title').textContent = name + ' — Consent Form';
+  const rows = [
+    ['Date submitted', new Date(s.date).toLocaleString('en-AU')],
+    ['Expires', new Date(s.expiry).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })],
+    ['Type', s.type === 'parent' ? 'Parent / Guardian' : 'Personal consent'],
+    s.type === 'parent' ? ['Student', s.studentName] : ['Name', s.subjectName],
+    ['School', s.school], ['Sport / Team', s.sport],
+    ...(s.type === 'parent' ? [['Parent', s.parentName + ' (' + s.relationship + ')'], ['Email', s.parentEmail]] : [['Email', s.email]]),
+    ['Instagram', s.consents.instagram ? '✓ Consented' : '✗ Not consented'],
+    ['Website', s.consents.website ? '✓ Consented' : '✗ Not consented'],
+    ['School / Club', s.consents.schoolUse ? '✓ Consented' : '✗ Not consented'],
+    ['Commercial', s.consents.commercial ? '✓ Consented' : '✗ Not consented'],
+    ['Name tags', s.consents.nameTag ? '✓ Consented' : '✗ Not consented'],
+    ...(s.notes ? [['Notes', s.notes]] : []),
+  ];
+  g('modal-body').innerHTML = rows.map(([k, v]) => `<div class="m-row"><span class="mk">${k}</span><span class="mv">${v}</span></div>`).join('');
+  g('modal-sig').innerHTML = s.signature ? `<p style="font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:.4rem;">Signature</p><img src="${s.signature}">` : '';
+  g('modal').classList.add('open');
+}
+
+function delSub(id) {
+  if (!confirm('Delete this submission permanently?')) return;
+  subs = subs.filter(x => x.id !== id); saveSubs();
+  updateAdminStats(); renderAdminTable();
+  toast('Deleted.');
+}
+
+function showAdminSec(name, btn) {
+  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.atab').forEach(b => b.classList.remove('active'));
+  g('asec-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function changeAdminPass() {
+  const cur = g('s-cur').value, nw = g('s-new').value, conf = g('s-conf').value;
+  const msg = g('s-msg');
+  if (cur !== adminPass) { msg.style.display = 'block'; msg.style.color = '#e07060'; msg.textContent = 'Current password incorrect.'; return; }
+  if (nw.length < 6) { msg.style.display = 'block'; msg.style.color = '#e07060'; msg.textContent = 'Minimum 6 characters required.'; return; }
+  if (nw !== conf) { msg.style.display = 'block'; msg.style.color = '#e07060'; msg.textContent = 'Passwords do not match.'; return; }
+  adminPass = nw; localStorage.setItem('jm_admp', nw);
+  msg.style.display = 'block'; msg.style.color = '#6EBD93'; msg.textContent = 'Password updated.';
+  g('s-cur').value = ''; g('s-new').value = ''; g('s-conf').value = '';
+}
+
+function exportCSV() {
+  if (!subs.length) { toast('No submissions to export.', true); return; }
+  const hdrs = ['Date', 'Expiry', 'Type', 'Name', 'School', 'Sport', 'Parent/Guardian', 'Email', 'Instagram', 'Website', 'School Use', 'Commercial', 'Name Tags', 'Notes', 'Status'];
+  const rows = subs.map(s => {
+    const name = s.type === 'parent' ? s.studentName : s.subjectName;
+    const email = s.type === 'parent' ? s.parentEmail : s.email;
+    const parent = s.type === 'parent' ? s.parentName + ' (' + s.relationship + ')' : '';
+    const status = !s.active && s.withdrawn ? 'Withdrawn' : new Date(s.expiry) < new Date() ? 'Expired' : 'Active';
+    return [new Date(s.date).toLocaleDateString('en-AU'), new Date(s.expiry).toLocaleDateString('en-AU'), s.type === 'parent' ? 'Parent' : 'Self', name, s.school, s.sport, parent, email, s.consents.instagram ? 'Yes' : 'No', s.consents.website ? 'Yes' : 'No', s.consents.schoolUse ? 'Yes' : 'No', s.consents.commercial ? 'Yes' : 'No', s.consents.nameTag ? 'Yes' : 'No', '"' + (s.notes || '').replace(/"/g, '""') + '"', status];
+  });
+  const csv = [hdrs, ...rows].map(r => r.join(',')).join('\n');
+  const a = document.createElement('a'); a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv); a.download = 'johnston-consents-' + new Date().toISOString().slice(0, 10) + '.csv'; a.click();
+}
+
+// ══════════════════════════════════════════════
+// MODAL
+// ══════════════════════════════════════════════
+function closeModal(e) { if (e.target === g('modal')) closeModalDirect(); }
+function closeModalDirect() { g('modal').classList.remove('open'); }
+
+// ══════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════
+function toast(msg, isErr = false) {
+  const t = g('toast'); t.textContent = msg; t.className = isErr ? 'show err' : 'show';
+  setTimeout(() => t.className = '', 3000);
+}
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+document.getElementById('privacy-date').textContent = new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+renderNav();
+</script>
+</body>
+</html>
